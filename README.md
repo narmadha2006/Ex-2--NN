@@ -1,6 +1,6 @@
-<H3>Name</H3>
-<H3>Register no.</H3>
-<H3>Date</H3>
+<H3>Name:NARMADHA S</H3>
+<H3>Register no. 212223220065</H3>
+<H3>Date 3.4.25</H3>
 <H3>Experiment No. 2 </H3>
 ## Implementation of Perceptron for Binary Classification
 # AIM:
@@ -49,13 +49,77 @@ STEP 9:For ‘N ‘ iterations ,do the following:<BR>
 STEP 10:Plot the error for each iteration <BR>
 STEP 11:Print the accuracy<BR>
 # PROGRAM:
-    ''' Insert your code here '''
+
+
+ ```
+
+     import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+
+class Perceptron:
+    def __init__(self, learning_rate=0.1):
+        self.learning_rate = learning_rate
+        self.weights = None
+        self.bias = 0
+
+    def fit(self, X, y, epochs=10):
+        self.weights = np.zeros(X.shape[1])
+        self.errors = []
+
+        for _ in range(epochs):
+            error_count = 0
+            for xi, yi in zip(X, y):
+                update = self.learning_rate * (yi - self.predict(xi))
+                self.weights += update * xi
+                self.bias += update
+                error_count += int(update != 0.0)
+            self.errors.append(error_count)
+            print(f"Epoch {_+1}, Errors: {error_count}")
+
+    def predict(self, X):
+        return np.where(np.dot(X, self.weights) + self.bias >= 0, 1, -1)
+
+# Load and preprocess the dataset
+data = pd.read_csv("/content/Iris_NN2.csv")
+X = data.iloc[:, :2].values  # Use first two features
+y = np.where(data.iloc[:, 4] == 'Iris-Setosa', 1, -1)  # Binary labels
+
+# Standardize features
+X = (X - X.mean(axis=0)) / X.std(axis=0)
+
+# Split data
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=0)
+
+# Train and test Perceptron
+model = Perceptron(learning_rate=0.01)
+model.fit(X_train, y_train)
+y_pred = model.predict(X_test)
+print(f"Accuracy: {accuracy_score(y_test, y_pred) * 100:.2f}%")
+
+# Plot errors
+plt.plot(range(1, len(model.errors) + 1), model.errors, marker='o')
+plt.xlabel('Epoch')
+plt.ylabel('Errors')
+plt.title('Training Errors')
+plt.show()
+
+```
 
 # OUTPUT:
 
-    ''' Show your result '''
+    
+  ![image](https://github.com/user-attachments/assets/7f06a90c-24ad-4f00-b679-2ffd69cf67da)
+
+  ![image](https://github.com/user-attachments/assets/26754e64-76d9-4404-be68-7a57674090e7)
+
+
+    
 
 # RESULT:
+
  Thus, a single layer perceptron model is implemented using python to classify Iris data set.
 
  
